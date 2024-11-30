@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Query App</title>
+    <script>
+        async function submitQuery() {
+            const query_question = document.getElementById('query_question').value;
+            // const model_mapping = { "A": 1, "B": 2, "C": 3, "D": 4 };
+            const selected_model = document.getElementById('model_dropdown').value;
+            const model_number = selected_model;
+
+            const response = await fetch('/api/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query_question, model_number })
+            });
+
+            const data = await response.json();
+            document.getElementById('links').value = data.links.join('\n');
+            document.getElementById('answer').value = data.answer;
+        }
+    </script>
+</head>
+<body>
+    <h1>Query App</h1>
+    <form onsubmit="event.preventDefault(); submitQuery();">
+        <label for="query_question">Query Question:</label><br>
+        <input type="text" id="query_question" name="query_question" required><br><br>
+
+        <label for="model_dropdown">Select Model:</label><br>
+        <select id="model_dropdown" name="model_dropdown">
+            <option value="1">Model 1</option>
+            <option value="2">Model 2</option>
+            <option value="3">Model 3</option>
+            <option value="4">Model 4</option>
+        </select><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Response</h2>
+    <label for="links">Links:</label><br>
+    <textarea id="links" name="links" rows="5" cols="50" readonly></textarea><br><br>
+
+    <label for="answer">Answer:</label><br>
+    <textarea id="answer" name="answer" rows="5" cols="50" readonly></textarea>
+</body>
+</html>
